@@ -1,0 +1,17 @@
+{
+  "name": "nodebackend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js",
+    "prepare": "husky"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10"
+  }
+}
