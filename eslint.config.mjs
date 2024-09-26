@@ -14,7 +14,7 @@ export default tseslint.config({
     // @ts-ignore
     extends: [eslint.configs.recommended, ...tseslint.configs.recommendedTypeChecked,eslintConfigPrettier],
     rules: {
-        // 'no-console': 'error',
+        'no-console': 'error',
         quotes: ['error', 'single', { allowTemplateLiterals: true }]
     }
 })
