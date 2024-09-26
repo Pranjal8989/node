@@ -1,0 +1,4 @@
+{
+    "ext":".ts",
+    "ingore" : ["dist","node_modules"]
+}

@@ -1,5 +1,6 @@
 node_modules
 dist
 logs
-.env.development
-.env.example
+# only when production is on
+# .env.development
+# .env.example
