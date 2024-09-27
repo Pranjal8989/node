@@ -1,13 +1,13 @@
 import { Request } from 'express'
 import { THttpError } from '../types/types'
-import responseMessage from '../costant/responseMessage'
+import responseMessage from '../constant/responseMessage'
 import config from '../config/config'
-import { EApplicationEnvironment } from '../costant/application'
+import { EApplicationEnvironment } from '../constant/application'
 import logger from './logger'
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export default (err: Error | unknown, req: Request, errorStatusCode: number = 500): THttpError => {
-    const errorobj: THttpError = {
+    const errorObj: THttpError = {
         success: false,
         statusCode: errorStatusCode,
         request: {
@@ -19,16 +19,13 @@ export default (err: Error | unknown, req: Request, errorStatusCode: number = 50
         data: null,
         trace: err instanceof Error ? { error: err.stack } : null
     }
-    // log
-    logger.info('CONTROLLER_RESPONSE', {
-        meta: errorobj
+    logger.error('CONTROLLER_ERROR', {
+        meta: errorObj
     })
 
-    //productionenv check
     if (config.ENV === EApplicationEnvironment.PRODUCTION) {
-        delete errorobj.request.ip
-        delete errorobj.trace
+        delete errorObj.request.ip
+        delete errorObj.trace
     }
-
-    return errorobj
+    return errorObj
 }

@@ -2,7 +2,7 @@ import express, { Application, NextFunction, Request, Response } from 'express'
 import path from 'path'
 import router from './router/apiRouter'
 import globalHandlerError from './middleware/globalHandlerError'
-import responseMessage from './costant/responseMessage'
+import responseMessage from './constant/responseMessage'
 import httpError from './util/httpError'
 
 const app: Application = express()

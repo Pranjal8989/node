@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import httpResponse from '../util/httpResponse'
-import responseMessage from '../costant/responseMessage'
+import responseMessage from '../constant/responseMessage'
 import httpError from '../util/httpError'
 
 export default {

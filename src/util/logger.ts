@@ -1,13 +1,16 @@
 import { createLogger, format, transports } from 'winston'
+import 'winston-mongodb'
 import { ConsoleTransportInstance, FileTransportInstance } from 'winston/lib/winston/transports'
 import util from 'util'
 import config from '../config/config'
-import { EApplicationEnvironment } from '../costant/application'
+import { EApplicationEnvironment } from '../constant/application'
 import path from 'path'
 import * as sourceMapSupport from 'source-map-support'
-import { red, blue, yellow, green,magenta } from 'colorette'
+import { blue, green, magenta, red, yellow } from 'colorette'
+import { MongoDBTransportInstance } from 'winston-mongodb'
 
-//Linking Trace Support
+
+//linking trace support
 sourceMapSupport.install()
 
 const colorizeLevel = (level: string) => {
@@ -28,7 +31,6 @@ const consoleLogFormat = format.printf((info) => {
     const { level, message, timestamp, meta = {} } = info
     const customLevel = colorizeLevel(level.toUpperCase())
 
-     
     const customTimestamp = green(timestamp as string)
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -37,11 +39,9 @@ const consoleLogFormat = format.printf((info) => {
     const customMeta = util.inspect(meta, {
         showHidden: false,
         depth: null,
-        colors:true
+        colors: true
     })
-
-    const customLog = `${customLevel}[${customTimestamp}] ${customMessage}\n${magenta('META')} ${customMeta}\n`
-
+    const customLog = `${customLevel} [${customTimestamp}] ${customMessage}\n${magenta('META')} ${customMeta}\n`
     return customLog
 })
 
@@ -56,7 +56,6 @@ const consoleTransport = (): Array<ConsoleTransportInstance> => {
     }
     return []
 }
-
 const fileLogFormat = format.printf((info) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { level, message, timestamp, meta = {} } = info
@@ -82,10 +81,8 @@ const fileLogFormat = format.printf((info) => {
         timestamp,
         meta: logMeta
     }
-
     return JSON.stringify(logData, null, 4)
 })
-
 const fileTransport = (): Array<FileTransportInstance> => {
     return [
         new transports.File({
@@ -96,9 +93,26 @@ const fileTransport = (): Array<FileTransportInstance> => {
     ]
 }
 
+
+const mongodbTransport = (): Array<MongoDBTransportInstance> => {
+    return [
+        new transports.MongoDB({
+            level : 'info',
+            db: config.DATABASE_URL as string,
+            metaKey:'meta',
+            expireAfterSeconds: 3600 * 24* 30,
+            options:{
+                useUnifiedTopology:true
+            },
+            collection:'application-log'
+        })
+    ]
+}
+
+
 export default createLogger({
     defaultMeta: {
         meta: {}
     },
-    transports: [...fileTransport(), ...consoleTransport()]
+    transports: [...mongodbTransport(), ...fileTransport(), ...consoleTransport()]
 })
