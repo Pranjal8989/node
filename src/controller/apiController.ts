@@ -1,26 +1,56 @@
 import { NextFunction, Request, Response } from 'express'
+import userModel from '../model/userModel'
 import httpResponse from '../util/httpResponse'
 import responseMessage from '../constant/responseMessage'
 import httpError from '../util/httpError'
-import quicker from '../util/quicker'
+
 
 export default {
-    self: (req: Request, res: Response, next: NextFunction) => {
+    getAllUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            httpResponse(req, res, 200, responseMessage.SUCCESS)
+            const userData = await userModel.find()
+            httpResponse(req, res, 200, responseMessage.USERS_FETCHED, userData)
         } catch (err) {
             httpError(next, err, req, 500)
         }
     },
-    health: (req: Request, res: Response, next: NextFunction) => {
+    getUserByID: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const healthData = {
-                application: quicker.getApplicationHealth(),
-                system: quicker.getSystemHealth()
+            const id = req.params.id
+            const userData = await userModel.findById({_id:id})
+httpResponse(req,res,200,responseMessage.USERS_FETCHED,userData)
+        } catch (err) {
+            httpError(next,err,req,500)
+        }
+    },
+    createUser:async(req:Request,res:Response,next:NextFunction)=>{
+        try {
+            const userData = new userModel(req.body)
+            const {email} = userData
+            const userExist = await userModel.findOne({email})
+            if(userExist){
+                return httpResponse(req,res,200,responseMessage.USER_EXIST,userExist)
             }
-            httpResponse(req, res, 200, responseMessage.SUCCESS,healthData)
+            const user = await userModel.create(userData)
+            httpResponse(req,res,200,responseMessage.USER_CREATED,user)
+        } catch (err) {
+            httpError(next,err,req,500)
+            
+        }
+
+    },
+    updateUser: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            const userExist = await userModel.findOne({ _id: id })
+           
+            if (!userExist) {
+                return httpError(next, responseMessage.NOT_FOUND, req, 404)
+            }
+            // const userData = await userModel.findByIdAndUpdate(id, req.body, { new: true })
+            // httpResponse(req, res, 200, responseMessage.USER_UPDATED, userData)
         } catch (err) {
             httpError(next, err, req, 500)
         }
-    }
+    },
 }

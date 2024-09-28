@@ -3,7 +3,10 @@ import apiController from '../controller/apiController'
 
 const router = Router()
 
-router.route('/self').get(apiController.self)
-router.route('/health').get(apiController.health)
+router.route('/').get(apiController.getAllUser)
+router.route('/:id').get(apiController.getUserByID)
+router.route('/').post(apiController.createUser)
+router.route('/:id').put(apiController.updateUser)
+
 
 export default router
