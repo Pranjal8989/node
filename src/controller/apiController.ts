@@ -31,7 +31,7 @@ httpResponse(req,res,200,responseMessage.USERS_FETCHED,userData)
             if(userExist){
                 return httpResponse(req,res,200,responseMessage.USER_EXIST,userExist)
             }
-            const user = await userModel.create(userData)
+            const user = await userData.save()
             httpResponse(req,res,200,responseMessage.USER_CREATED,user)
         } catch (err) {
             httpError(next,err,req,500)
