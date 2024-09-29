@@ -6,6 +6,7 @@ import responseMessage from './constant/responseMessage'
 import httpError from './util/httpError'
 import helmet from 'helmet'
 import cors from 'cors'
+import session from './types/session'
 
 const app: Application = express()
 
@@ -20,6 +21,9 @@ app.use(
 )
 app.use(express.json())
 app.use(express.static(path.join(__dirname, '../', 'public')))
+
+// session 
+app.use(session)
 
 //Routes
 app.use('/api', router)

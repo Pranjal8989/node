@@ -1,13 +1,11 @@
 import { Router } from 'express'
-import apiController from '../controller/apiController'
+import loginController from '../controller/loginController'
 
 const router = Router()
 
-router.route('/').get(apiController.getAllUser)
-router.route('/:id').get(apiController.getUserByID)
-router.route('/').post(apiController.createUser)
-router.route('/:id').put(apiController.updateUser)
-router.route('/:id').delete(apiController.deleteUser)
+router.route('/register').post(loginController.register)
+router.route('/login').post(loginController.login)
+router.route('/logout').get(loginController.logout)
 
 
 export default router
