@@ -25,14 +25,23 @@ httpResponse(req,res,200,responseMessage.USERS_FETCHED,userData)
     },
     createUser:async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const userData = new userModel(req.body)
+            if (!req.file) {
+                return httpResponse(req, res, 400, responseMessage.FILE_REQUIRED);
+            }
+    
+            // Create a new user instance with file path
+            const { path: filepath } = req.file;
+            const userData = new userModel({
+                ...req.body, // spread operator to include other user fields
+                filePath: filepath // save the file path here
+            });
             const {email} = userData
             const userExist = await userModel.findOne({email})
             if(userExist){
                 return httpResponse(req,res,200,responseMessage.USER_EXIST,userExist)
             }
-            const user = await userData.save()
-            httpResponse(req,res,200,responseMessage.USER_CREATED,user)
+             await userData.save()
+            httpResponse(req,res,200,responseMessage.USER_CREATED,userData)
         } catch (err) {
             httpError(next,err,req,500)
             

@@ -18,6 +18,6 @@ export default session({
     saveUninitialized: true,
     cookie: {
         secure: false,
-        maxAge: 600000000,
+        maxAge: 6000000 ,
     },
 });
