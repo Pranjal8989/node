@@ -1,14 +1,14 @@
 // sessionConfig.ts
-import session from 'express-session';
-import config from '../config/config';
+import session from 'express-session'
+import config from '../config/config'
 
 declare module 'express-session' {
     interface SessionData {
         user: {
-            email: string;
-            name: string;
-            role: string;
-        };
+            email: string
+            name: string
+            role: string
+        }
     }
 }
 
@@ -18,6 +18,6 @@ export default session({
     saveUninitialized: true,
     cookie: {
         secure: false,
-        maxAge: 6000000 ,
-    },
-});
+        maxAge: 6000000
+    }
+})

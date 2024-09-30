@@ -6,8 +6,8 @@ import logger from './util/logger';
 
 const server = app.listen(config.PORT)
 // invoke function
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-;(async() => {
+ 
+;void (async() => {
     try {
         // Database_connection
          const connection = await databaseService.connect()

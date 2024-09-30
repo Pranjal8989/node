@@ -5,22 +5,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    city:{
-        type:String,
-        require:true
+    city: {
+        type: String,
+        require: true
     },
-    phone:{
-        type:Number,
-        require:true
+    phone: {
+        type: Number,
+        require: true
     },
-    email:{
-        type:String,
-        require:true
+    email: {
+        type: String,
+        require: true
     },
-    image:{
-        type:String,
-        require:true
+    image: {
+        type: String,
+        require: true
     }
 })
 
-export default mongoose.model('user',userSchema)
+export default mongoose.model('user', userSchema)

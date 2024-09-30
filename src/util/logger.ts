@@ -9,7 +9,6 @@ import * as sourceMapSupport from 'source-map-support'
 import { blue, green, magenta, red, yellow } from 'colorette'
 import { MongoDBTransportInstance } from 'winston-mongodb'
 
-
 //linking trace support
 sourceMapSupport.install()
 
@@ -93,22 +92,20 @@ const fileTransport = (): Array<FileTransportInstance> => {
     ]
 }
 
-
 const mongodbTransport = (): Array<MongoDBTransportInstance> => {
     return [
         new transports.MongoDB({
-            level : 'info',
+            level: 'info',
             db: config.DATABASE_URL as string,
-            metaKey:'meta',
-            expireAfterSeconds: 3600 * 24* 30,
-            options:{
-                useUnifiedTopology:true
-            },
-            collection:'application-log'
+            metaKey: 'meta',
+            expireAfterSeconds: 3600 * 24 * 30,
+            // options:{
+            //     useUnifiedTopology:true
+            // },
+            collection: 'application-log'
         })
     ]
 }
-
 
 export default createLogger({
     defaultMeta: {

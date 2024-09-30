@@ -5,6 +5,7 @@ import config from '../config/config'
 import { EApplicationEnvironment } from '../constant/application'
 import logger from './logger'
 
+ 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export default (err: Error | unknown, req: Request, errorStatusCode: number = 500): THttpError => {
     const errorObj: THttpError = {
@@ -15,7 +16,12 @@ export default (err: Error | unknown, req: Request, errorStatusCode: number = 50
             method: req.method,
             url: req.originalUrl
         },
-        message: err instanceof Error ? err.message || responseMessage.SOMETHING_WENT_WRONG : responseMessage.SOMETHING_WENT_WRONG,
+        message:
+            err instanceof Error && typeof err.message === 'string'
+                ? err.message
+                : typeof err === 'string'
+                  ? err || responseMessage.SOMETHING_WENT_WRONG
+                  : responseMessage.SOMETHING_WENT_WRONG,
         data: null,
         trace: err instanceof Error ? { error: err.stack } : null
     }
