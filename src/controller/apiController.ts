@@ -25,23 +25,25 @@ export default {
     },
     createUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.file) {
-                return httpResponse(req, res, 400, responseMessage.FILE_REQUIRED)
-            }
-            // Create a new user instance with file path
-            const { filename, path: filepath } = req.file
-            const userData = new userModel({
-                ...req.body,
-                image: filename,
-                filepath: filepath // save the file path here
-            })
-            const { email } = userData
+            const { email } = req.body
             const userExist = await userModel.findOne({ email })
             if (userExist) {
                 return httpResponse(req, res, 200, responseMessage.USER_EXIST, userExist)
+            } else {
+                if (!req.file) {
+                    return httpResponse(req, res, 400, responseMessage.FILE_REQUIRED)
+                }
+                // Create a new user instance with file path
+                const { filename, path: filepath } = req.file
+                const userData = new userModel({
+                    ...req.body,
+                    image: filename,
+                    filepath: filepath // save the file path here
+                })
+
+                await userData.save()
+                httpResponse(req, res, 200, responseMessage.USER_CREATED, userData)
             }
-            await userData.save()
-            httpResponse(req, res, 200, responseMessage.USER_CREATED, userData)
         } catch (err) {
             httpError(next, err, req, 500)
         }
